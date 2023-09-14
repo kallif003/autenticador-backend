@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const emailMsg_1 = require("../utils/emailMsg");
 class EmailService {
-    static sendEmail(recipient, service) {
+    static sendEmail(recipient, service, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const transportConfig = nodemailer_1.default.createTransport({
@@ -32,7 +32,7 @@ class EmailService {
                     from: `Aunteticador ${service} <${process.env.USER_EMAIL}>`,
                     to: "kallifabrahao@gmail.com",
                     subject: "Cadastro de senha",
-                    html: emailMsg_1.message,
+                    html: (0, emailMsg_1.message)(userId, service),
                 })
                     .then((res) => console.log("deu certo ", res));
             }

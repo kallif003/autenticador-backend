@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import { message } from "../utils/emailMsg";
 
 class EmailService {
-  static async sendEmail(recipient: string, service: string) {
+  static async sendEmail(recipient: string, service: string, userId: string) {
     try {
       const transportConfig = nodemailer.createTransport({
         host: "smtp-mail.outlook.com",
@@ -19,7 +19,7 @@ class EmailService {
           from: `Aunteticador ${service} <${process.env.USER_EMAIL}>`,
           to: "kallifabrahao@gmail.com",
           subject: "Cadastro de senha",
-          html: message,
+          html: message(userId, service),
         })
         .then((res) => console.log("deu certo ", res));
     } catch (error) {

@@ -3,6 +3,7 @@ import UserService from "../services/user_service";
 import { IUser } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
 import PasswordGenerator from "../utils/passwordGenerator";
+import { Service } from "../utils/enum";
 
 class UserController {
   async createUser(req: Request, res: Response) {
@@ -32,13 +33,19 @@ class UserController {
 
   async redefinePassword(req: Request, res: Response) {
     try {
-      const { email, password }: IUser = req.body;
+      const { email, password, service }: IUser = req.body;
 
       const { id } = req.params;
 
       await UserService.passwordResetService([{ email, password }], id);
 
-      return res.status(204).send("Senha redefinida com sucesso");
+      let url = "";
+
+      if (service == Service.SAVEMONEY) {
+        url = process.env.SAVEMONY_SERVICE;
+      }
+
+      return res.status(200).send(url);
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).send({ message: error.message });

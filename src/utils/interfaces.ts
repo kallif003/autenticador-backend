@@ -14,8 +14,9 @@ export interface IUserSchema extends Document {
 export interface IUser {
   name?: string;
   password: string;
-  email: string;
+  email?: string;
   id?: string;
+  service?: string;
 }
 
 export interface UserDataService {

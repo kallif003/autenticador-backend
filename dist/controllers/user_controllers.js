@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_service_1 = __importDefault(require("../services/user_service"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 const passwordGenerator_1 = __importDefault(require("../utils/passwordGenerator"));
+const enum_1 = require("../utils/enum");
 class UserController {
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -42,10 +43,14 @@ class UserController {
     redefinePassword(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { email, password } = req.body;
+                const { email, password, service } = req.body;
                 const { id } = req.params;
                 yield user_service_1.default.passwordResetService([{ email, password }], id);
-                return res.status(204).send("Senha redefinida com sucesso");
+                let url = "";
+                if (service == enum_1.Service.SAVEMONEY) {
+                    url = process.env.SAVEMONY_SERVICE;
+                }
+                return res.status(200).send(url);
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {

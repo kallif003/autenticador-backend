@@ -34,7 +34,7 @@ class UserService {
                 const newUser = new users_1.default(Object.assign({}, userData));
                 const savedUser = yield newUser.save();
                 if (savedUser) {
-                    yield email_service_1.default.sendEmail(email, service);
+                    yield email_service_1.default.sendEmail(email, service, savedUser.id);
                 }
                 return savedUser;
             }

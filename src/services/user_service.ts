@@ -30,7 +30,7 @@ class UserService {
       const savedUser = await newUser.save();
 
       if (savedUser) {
-        await EmailService.sendEmail(email, service);
+        await EmailService.sendEmail(email, service, savedUser.id);
       }
 
       return savedUser;
