@@ -23,11 +23,12 @@ export interface UserDataService {
   role: string[];
   password: string;
   email: string;
+  service: string;
 }
 
 export interface IRefreshToken extends Document {
-    userId: string;
-    refreshToken: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }
+  userId: string;
+  refreshToken: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

@@ -2,11 +2,12 @@ import bcrypt from "bcrypt";
 import User from "../models/users";
 import { IUser, UserDataService } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
+import EmailService from "./email_service";
 
 class UserService {
   static async createUser(userData: UserDataService) {
     try {
-      const { email } = userData;
+      const { email, service } = userData;
 
       const existingUser = await User.findOne({
         email,
@@ -27,6 +28,10 @@ class UserService {
       });
 
       const savedUser = await newUser.save();
+
+      if (savedUser) {
+        await EmailService.sendEmail(email, service);
+      }
 
       return savedUser;
     } catch (error: any) {

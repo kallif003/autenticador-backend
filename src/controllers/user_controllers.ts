@@ -7,7 +7,7 @@ import PasswordGenerator from "../utils/passwordGenerator";
 class UserController {
   async createUser(req: Request, res: Response) {
     try {
-      const { name, email, role } = req.body;
+      const { name, email, role, service } = req.body;
 
       const generator = new PasswordGenerator();
       const password = generator.generateRandomPassword();
@@ -17,6 +17,7 @@ class UserController {
         role,
         password,
         email,
+        service,
       });
 
       return res.status(201).json(createUser);

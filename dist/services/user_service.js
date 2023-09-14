@@ -15,11 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const users_1 = __importDefault(require("../models/users"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
+const email_service_1 = __importDefault(require("./email_service"));
 class UserService {
     static createUser(userData) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { email } = userData;
+                const { email, service } = userData;
                 const existingUser = yield users_1.default.findOne({
                     email,
                     deleted: false,
@@ -32,6 +33,9 @@ class UserService {
                 userData.password = hashedPassword;
                 const newUser = new users_1.default(Object.assign({}, userData));
                 const savedUser = yield newUser.save();
+                if (savedUser) {
+                    yield email_service_1.default.sendEmail(email, service);
+                }
                 return savedUser;
             }
             catch (error) {

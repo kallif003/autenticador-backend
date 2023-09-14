@@ -19,7 +19,7 @@ class UserController {
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, email, role } = req.body;
+                const { name, email, role, service } = req.body;
                 const generator = new passwordGenerator_1.default();
                 const password = generator.generateRandomPassword();
                 const createUser = yield user_service_1.default.createUser({
@@ -27,6 +27,7 @@ class UserController {
                     role,
                     password,
                     email,
+                    service,
                 });
                 return res.status(201).json(createUser);
             }
