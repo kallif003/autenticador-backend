@@ -32,7 +32,7 @@ class TokenService {
                     return refreshToken;
             }
             catch (error) {
-                throw new Error(error.message);
+                return error;
             }
         });
     }
@@ -60,6 +60,20 @@ class TokenService {
                 const token = this.generateAcessToken(user.role, user.name, userInfo.userId);
                 const refreshToken = yield this.generateRefreshToken(user.id);
                 return { token, refreshToken };
+            }
+            return null;
+        });
+    }
+    static decodedTokenService(jwtToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const decodedToken = jsonwebtoken_1.default.decode(jwtToken);
+            if (decodedToken && decodedToken.exp) {
+                const { name, permission, userId } = decodedToken;
+                return {
+                    name,
+                    permission,
+                    userId,
+                };
             }
             return null;
         });

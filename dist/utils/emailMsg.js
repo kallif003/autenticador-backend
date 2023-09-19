@@ -45,7 +45,7 @@ const message = (userId, service) => {
                 </p>
 
                 <button>
-                <a href="http://localhost:8080/cadastro/${service}/${userId}">Cadastrar senha</a>
+                <a href="${process.env.AUTHENTICATOR_FRONT}/cadastro/${service}/${userId}">Cadastrar senha</a>
                 </button>
             </div>
         </body>

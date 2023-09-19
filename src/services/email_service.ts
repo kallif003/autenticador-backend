@@ -17,7 +17,7 @@ class EmailService {
       await transportConfig
         .sendMail({
           from: `Aunteticador ${service} <${process.env.USER_EMAIL}>`,
-          to: "kallifabrahao@gmail.com",
+          to: recipient,
           subject: "Cadastro de senha",
           html: message(userId, service),
         })

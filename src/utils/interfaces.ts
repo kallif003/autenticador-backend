@@ -1,10 +1,23 @@
 import { Document } from "mongoose";
+import { JwtPayload } from "jsonwebtoken";
+
+export interface UserPayload extends JwtPayload {
+  name: string;
+  permission: string[];
+  userId: string;
+}
+
+export interface ITokenResponse {
+  token: string;
+  refreshToken: string;
+}
 
 export interface IUserSchema extends Document {
   name: string;
-  role: string[];
+  role: Array<string>;
   password: string;
   email: string;
+  _id: string;
   createdAt: Date;
   deletedAt?: Date;
   updatedAt?: Date;
@@ -13,10 +26,12 @@ export interface IUserSchema extends Document {
 
 export interface IUser {
   name?: string;
-  password: string;
+  password?: string;
   email?: string;
   id?: string;
   service?: string;
+  permission?: Array<string>;
+  userId?: string;
 }
 
 export interface UserDataService {

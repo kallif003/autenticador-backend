@@ -1,7 +1,8 @@
 import { validationResult } from "express-validator";
 import { NextFunction, Request, Response, RequestHandler } from "express";
-import { UserPayload } from "../utils/jwtUtils";
+import { UserPayload } from "../utils/interfaces";
 import TokenService from "../services/token_service";
+import HandleError from "../utils/errors/handleError";
 
 export const validRequest = (
   req: Request,
@@ -42,6 +43,7 @@ export const verifyToken = (
 ) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
+
     if (!token) {
       res.status(401).json({ message: "Token não fornecido" });
       return;
@@ -82,4 +84,12 @@ export const cacheControlMiddleware = (
 ) => {
   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   next();
+};
+
+export const errorHandler = (req: Request, res: Response, error: any) => {
+  if (error instanceof HandleError) {
+    return res.status(error.statusCode).send({ message: error.message });
+  }
+
+  return res.status(500).send({ message: error.message });
 };

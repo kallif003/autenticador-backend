@@ -9,11 +9,12 @@ class UserController {
   async createUser(req: Request, res: Response) {
     try {
       const { name, email, role, service } = req.body;
+      console.log("oi");
 
       const generator = new PasswordGenerator();
       const password = generator.generateRandomPassword();
 
-      const createUser = await UserService.createUser({
+      await UserService.createUser({
         name,
         role,
         password,
@@ -21,7 +22,7 @@ class UserController {
         service,
       });
 
-      return res.status(201).json(createUser);
+      return res.status(201).json("usuário cadastrado com sucesso");
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).send({ message: error.message });

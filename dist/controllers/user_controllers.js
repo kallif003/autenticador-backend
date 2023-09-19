@@ -21,16 +21,17 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, email, role, service } = req.body;
+                console.log("oi");
                 const generator = new passwordGenerator_1.default();
                 const password = generator.generateRandomPassword();
-                const createUser = yield user_service_1.default.createUser({
+                yield user_service_1.default.createUser({
                     name,
                     role,
                     password,
                     email,
                     service,
                 });
-                return res.status(201).json(createUser);
+                return res.status(201).json("usuário cadastrado com sucesso");
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {

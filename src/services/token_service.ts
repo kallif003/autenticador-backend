@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import TokenModel from "../models/refreshToken";
 import User from "../models/users";
+import { UserPayload } from "../utils/interfaces";
 
 let JWT_SECRET = String(process.env.SECRET_KEY);
 
@@ -20,7 +21,7 @@ class TokenService {
 
       if (saveToken) return refreshToken;
     } catch (error) {
-      throw new Error(error.message);
+      return error;
     }
   }
 
@@ -64,6 +65,21 @@ class TokenService {
       const refreshToken = await this.generateRefreshToken(user.id);
 
       return { token, refreshToken };
+    }
+    return null;
+  }
+
+  static async decodedTokenService(jwtToken: string): Promise<UserPayload> {
+    const decodedToken = jwt.decode(jwtToken) as UserPayload;
+
+    if (decodedToken && decodedToken.exp) {
+      const { name, permission, userId } = decodedToken;
+
+      return {
+        name,
+        permission,
+        userId,
+      };
     }
     return null;
   }

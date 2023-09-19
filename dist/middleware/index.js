@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cacheControlMiddleware = exports.verifyPermission = exports.verifyToken = exports.validRequest = void 0;
+exports.errorHandler = exports.cacheControlMiddleware = exports.verifyPermission = exports.verifyToken = exports.validRequest = void 0;
 const express_validator_1 = require("express-validator");
 const token_service_1 = __importDefault(require("../services/token_service"));
+const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 const validRequest = (req, res, next) => {
     const myValidationResult = express_validator_1.validationResult.withDefaults({
         formatter: (error) => {
@@ -65,4 +66,11 @@ const cacheControlMiddleware = (req, res, next) => {
     next();
 };
 exports.cacheControlMiddleware = cacheControlMiddleware;
+const errorHandler = (req, res, error) => {
+    if (error instanceof handleError_1.default) {
+        return res.status(error.statusCode).send({ message: error.message });
+    }
+    return res.status(500).send({ message: error.message });
+};
+exports.errorHandler = errorHandler;
 //# sourceMappingURL=index.js.map
