@@ -32,15 +32,16 @@ class TokenService {
                     return refreshToken;
             }
             catch (error) {
-                throw new Error(error.message);
+                return error;
             }
         });
     }
-    static generateAcessToken(permission, name, userId) {
+    static generateAcessToken(permission, name, userId, email) {
         let config = {
             permission,
             name,
             userId,
+            email,
         };
         const token = jsonwebtoken_1.default.sign(config, JWT_SECRET, { expiresIn: "5h" });
         return token;
@@ -57,9 +58,24 @@ class TokenService {
             });
             const user = yield users_1.default.findById(userInfo.userId);
             if (refresh_token) {
-                const token = this.generateAcessToken(user.role, user.name, userInfo.userId);
+                const token = this.generateAcessToken(user.role, user.name, userInfo.userId, user.email);
                 const refreshToken = yield this.generateRefreshToken(user.id);
                 return { token, refreshToken };
+            }
+            return null;
+        });
+    }
+    static decodedTokenService(jwtToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const decodedToken = jsonwebtoken_1.default.decode(jwtToken);
+            if (decodedToken && decodedToken.exp) {
+                const { name, permission, userId, email } = decodedToken;
+                return {
+                    name,
+                    permission,
+                    userId,
+                    email,
+                };
             }
             return null;
         });

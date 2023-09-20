@@ -3,11 +3,10 @@ import { Permissions, Routes } from "../utils/enum";
 import UserController from "../controllers/user_controllers";
 import { validRequest, verifyPermission, verifyToken } from "../middleware";
 import { userCreateSchema } from "../middleware/schemas/userSchema";
+import { typePermissions } from "../utils/permissions";
 
 const user_route = express.Router();
 const user_controller = new UserController();
-
-const permissions = [Permissions.SAVEMONEY_USER];
 
 user_route
   .post(
@@ -16,22 +15,18 @@ user_route
     validRequest,
     user_controller.createUser
   )
-  .put(Routes.REDEFINE_PASSWORD, user_controller.redefinePassword)
+  .put(Routes.CREATE_PASSWORD, user_controller.redefinePassword)
   .put(
-    Routes.NEW_PASSWORD,
+    Routes.CHANGE_PASSWORD,
     verifyToken,
-    verifyPermission(permissions),
-    user_controller.redefinePassword
+    verifyPermission(typePermissions),
+    user_controller.changePassword
   )
   .delete(
     Routes.DELETE_USER,
     verifyToken,
-    verifyPermission(permissions),
+    verifyPermission(typePermissions),
     user_controller.deleteUsers
   );
 
 export default user_route;
-function myValidationResult(): import("express-serve-static-core").RequestHandlerParams<Record<string, any>, any, any, import("qs").ParsedQs, Record<string, any>> {
-  throw new Error("Function not implemented.");
-}
-
