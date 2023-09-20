@@ -16,7 +16,6 @@ user_route
     user_controller.createUser
   )
   .put(Routes.CREATE_PASSWORD, user_controller.redefinePassword)
-  .put(Routes.REDEFINE_PASSWORD, user_controller.redefinePassword)
   .put(
     Routes.CHANGE_PASSWORD,
     verifyToken,

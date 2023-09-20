@@ -17,6 +17,7 @@ const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 const passwordGenerator_1 = __importDefault(require("../utils/passwordGenerator"));
 const enum_1 = require("../utils/enum");
 const email_service_1 = __importDefault(require("../services/email_service"));
+const users_1 = __importDefault(require("../models/users"));
 class UserController {
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,7 +46,11 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, service } = req.body;
-                const { id } = req.params;
+                let { id } = req.params;
+                if (id == "undefined") {
+                    const user = yield users_1.default.findOne({ email, deleted: false });
+                    id = user.id;
+                }
                 yield email_service_1.default.sendEmail(email, service, id, enum_1.Actions.UPDATE);
                 return res.status(201).json({ message: "Email enviado com sucesso" });
             }

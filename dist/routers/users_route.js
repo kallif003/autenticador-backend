@@ -14,7 +14,6 @@ const user_controller = new user_controllers_1.default();
 user_route
     .post(enum_1.Routes.SAVE_USER, userSchema_1.userCreateSchema, middleware_1.validRequest, user_controller.createUser)
     .put(enum_1.Routes.CREATE_PASSWORD, user_controller.redefinePassword)
-    .put(enum_1.Routes.REDEFINE_PASSWORD, user_controller.redefinePassword)
     .put(enum_1.Routes.CHANGE_PASSWORD, middleware_1.verifyToken, (0, middleware_1.verifyPermission)(permissions_1.typePermissions), user_controller.changePassword)
     .delete(enum_1.Routes.DELETE_USER, middleware_1.verifyToken, (0, middleware_1.verifyPermission)(permissions_1.typePermissions), user_controller.deleteUsers);
 exports.default = user_route;

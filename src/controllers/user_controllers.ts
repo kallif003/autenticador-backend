@@ -5,6 +5,7 @@ import HandleError from "../utils/errors/handleError";
 import PasswordGenerator from "../utils/passwordGenerator";
 import { Actions, Service } from "../utils/enum";
 import EmailService from "../services/email_service";
+import User from "../models/users";
 
 class UserController {
   async createUser(req: Request, res: Response) {
@@ -36,7 +37,13 @@ class UserController {
     try {
       const { email, service } = req.body;
 
-      const { id } = req.params;
+      let { id } = req.params;
+
+      if (id == "undefined") {
+        const user = await User.findOne({ email, deleted: false });
+
+        id = user.id;
+      }
 
       await EmailService.sendEmail(email, service, id, Actions.UPDATE);
 
