@@ -3,6 +3,7 @@ import User from "../models/users";
 import { IUser, UserDataService } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
 import EmailService from "./email_service";
+import { Actions } from "../utils/enum";
 
 class UserService {
   static async createUser(userData: UserDataService) {
@@ -30,7 +31,12 @@ class UserService {
       const savedUser = await newUser.save();
 
       if (savedUser) {
-        await EmailService.sendEmail(email, service, savedUser.id);
+        await EmailService.sendEmail(
+          email,
+          service,
+          savedUser.id,
+          Actions.CREATE
+        );
       }
 
       return savedUser;

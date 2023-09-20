@@ -16,6 +16,8 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 const token_service_1 = __importDefault(require("../services/token_service"));
 const users_1 = __importDefault(require("../models/users"));
+class IAuthService {
+}
 class AuthService {
     findUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -39,7 +41,7 @@ class AuthService {
     generateTokens(user) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const token = token_service_1.default.generateAcessToken(user.role, user.name, user._id);
+                const token = token_service_1.default.generateAcessToken(user.role, user.name, user._id, user.email);
                 const refreshToken = yield token_service_1.default.generateRefreshToken(user.id);
                 return { token, refreshToken };
             }

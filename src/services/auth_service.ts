@@ -4,14 +4,19 @@ import HandleError from "../utils/errors/handleError";
 import TokenService from "../services/token_service";
 import User from "../models/users";
 
-interface IAuthService {
-  findUserByEmail(email: string): Promise<IUserSchema | null>;
-  comparePasswords(password: string, hashedPassword: string): Promise<boolean>;
-  generateTokens(user: IUserSchema): Promise<ITokenResponse>;
+abstract class IAuthService {
+  abstract findUserByEmail(email: string): Promise<IUserSchema | null>;
+
+  abstract comparePasswords(
+    password: string,
+    hashedPassword: string
+  ): Promise<boolean>;
+
+  abstract generateTokens(user: IUserSchema): Promise<ITokenResponse>;
 }
 
 class AuthService implements IAuthService {
-  public async findUserByEmail(email: string): Promise<IUserSchema> {
+  async findUserByEmail(email: string): Promise<IUserSchema> {
     try {
       const user = await User.findOne({ email, deleted: false });
 
@@ -25,19 +30,20 @@ class AuthService implements IAuthService {
     }
   }
 
-  public async comparePasswords(
+  async comparePasswords(
     password: string,
     hashedPassword: string
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  public async generateTokens(user: IUserSchema): Promise<ITokenResponse> {
+  async generateTokens(user: IUserSchema): Promise<ITokenResponse> {
     try {
       const token = TokenService.generateAcessToken(
         user.role,
         user.name,
-        user._id
+        user._id,
+        user.email
       );
 
       const refreshToken = await TokenService.generateRefreshToken(user.id);
@@ -48,7 +54,7 @@ class AuthService implements IAuthService {
     }
   }
 
-  public parseCredentials(
+  parseCredentials(
     authHeader: string
   ): { email: string; password: string } | null {
     if (!authHeader || !authHeader.startsWith("Basic ")) {

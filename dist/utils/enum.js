@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Service = exports.Permissions = exports.Routes = void 0;
+exports.Actions = exports.Service = exports.Permissions = exports.Routes = void 0;
 var Routes;
 (function (Routes) {
     Routes["SAVE_USER"] = "/api/user/save";
     Routes["UPDATE_USER"] = "/user/update/:id";
-    Routes["REDEFINE_PASSWORD"] = "/api/redefine_password/:id";
-    Routes["NEW_PASSWORD"] = "/api/new_password/:id";
+    Routes["REDEFINE_PASSWORD"] = "/api/redefine_password";
+    Routes["CHANGE_PASSWORD"] = "/api/change_password/:id";
+    Routes["CREATE_PASSWORD"] = "/api/create_password/:id";
     Routes["DELETE_USER"] = "/user/:id";
     Routes["LOGIN"] = "/api/login";
     Routes["PAYLOAD"] = "/api/payload";
@@ -21,4 +22,9 @@ var Service;
 (function (Service) {
     Service["SAVEMONEY"] = "SaveMoney";
 })(Service = exports.Service || (exports.Service = {}));
+var Actions;
+(function (Actions) {
+    Actions["CREATE"] = "create";
+    Actions["UPDATE"] = "update";
+})(Actions = exports.Actions || (exports.Actions = {}));
 //# sourceMappingURL=enum.js.map

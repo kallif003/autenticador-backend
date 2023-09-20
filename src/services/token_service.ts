@@ -28,12 +28,14 @@ class TokenService {
   static generateAcessToken(
     permission: string[],
     name: string,
-    userId: string
+    userId: string,
+    email: string
   ): string {
     let config: any = {
       permission,
       name,
       userId,
+      email,
     };
 
     const token = jwt.sign(config, JWT_SECRET, { expiresIn: "5h" });
@@ -59,7 +61,8 @@ class TokenService {
       const token = this.generateAcessToken(
         user.role,
         user.name,
-        userInfo.userId
+        userInfo.userId,
+        user.email
       );
 
       const refreshToken = await this.generateRefreshToken(user.id);
@@ -73,12 +76,13 @@ class TokenService {
     const decodedToken = jwt.decode(jwtToken) as UserPayload;
 
     if (decodedToken && decodedToken.exp) {
-      const { name, permission, userId } = decodedToken;
+      const { name, permission, userId, email } = decodedToken;
 
       return {
         name,
         permission,
         userId,
+        email,
       };
     }
     return null;

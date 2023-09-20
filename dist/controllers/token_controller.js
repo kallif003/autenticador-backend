@@ -30,13 +30,18 @@ class TokenController {
     validatedToken(req, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.replace("Bearer ", "");
-            if (!token) {
-                res.status(401).json({ message: "Token não fornecido" });
-                return;
+            try {
+                const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.replace("Bearer ", "");
+                if (!token) {
+                    res.status(401).json({ message: "Token não fornecido" });
+                    return;
+                }
+                const validToken = token_service_1.default.verifyToken(token);
+                return res.status(200).json(validToken);
             }
-            const validToken = token_service_1.default.verifyToken(token);
-            return res.status(200).json(validToken);
+            catch (error) {
+                return res.status(401).json({ message: "Token invalido" });
+            }
         });
     }
 }

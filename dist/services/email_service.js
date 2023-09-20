@@ -15,30 +15,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const emailMsg_1 = require("../utils/emailMsg");
 class EmailService {
-    static sendEmail(recipient, service, userId) {
+    static sendEmail(recipient, service, userId, typeAction) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const transportConfig = nodemailer_1.default.createTransport({
-                    host: "smtp-mail.outlook.com",
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: process.env.USER_EMAIL,
-                        pass: `${process.env.USER_PASS}#`,
-                    },
-                });
-                yield transportConfig
-                    .sendMail({
-                    from: `Aunteticador ${service} <${process.env.USER_EMAIL}>`,
-                    to: recipient,
-                    subject: "Cadastro de senha",
-                    html: (0, emailMsg_1.message)(userId, service),
-                })
-                    .then((res) => console.log("deu certo ", res));
-            }
-            catch (error) {
-                console.log("error", error);
-            }
+            const transportConfig = nodemailer_1.default.createTransport({
+                host: "smtp-mail.outlook.com",
+                port: 587,
+                secure: false,
+                auth: {
+                    user: process.env.USER_EMAIL,
+                    pass: `${process.env.USER_PASS}#`,
+                },
+            });
+            yield transportConfig
+                .sendMail({
+                from: `Aunteticador ${service} <${process.env.USER_EMAIL}>`,
+                to: recipient,
+                subject: "Cadastro de senha",
+                html: (0, emailMsg_1.message)(userId, service, typeAction),
+            })
+                .then((res) => {
+                return res;
+            })
+                .catch((error) => {
+                return error;
+            });
         });
     }
 }

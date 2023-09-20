@@ -3,13 +3,13 @@ import UserService from "../services/user_service";
 import { IUser } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
 import PasswordGenerator from "../utils/passwordGenerator";
-import { Service } from "../utils/enum";
+import { Actions, Service } from "../utils/enum";
+import EmailService from "../services/email_service";
 
 class UserController {
   async createUser(req: Request, res: Response) {
     try {
       const { name, email, role, service } = req.body;
-      console.log("oi");
 
       const generator = new PasswordGenerator();
       const password = generator.generateRandomPassword();
@@ -32,6 +32,20 @@ class UserController {
     }
   }
 
+  async changePassword(req: Request, res: Response) {
+    try {
+      const { email, service } = req.body;
+
+      const { id } = req.params;
+
+      await EmailService.sendEmail(email, service, id, Actions.UPDATE);
+
+      return res.status(201).json({ message: "Email enviado com sucesso" });
+    } catch (error) {
+      return res.status(500).send({ message: error.message });
+    }
+  }
+
   async redefinePassword(req: Request, res: Response) {
     try {
       const { email, password, service }: IUser = req.body;
@@ -40,13 +54,12 @@ class UserController {
 
       await UserService.passwordResetService([{ email, password }], id);
 
-      let url = "";
-
       if (service == Service.SAVEMONEY) {
-        url = process.env.SAVEMONY_SERVICE;
+        let url = process.env.SAVEMONY_SERVICE;
+        return res.status(200).send(url);
       }
 
-      return res.status(200).send(url);
+      return res.status(204).send("Senha redefinida com sucesso");
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).send({ message: error.message });

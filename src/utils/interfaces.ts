@@ -5,6 +5,7 @@ export interface UserPayload extends JwtPayload {
   name: string;
   permission: string[];
   userId: string;
+  email: string;
 }
 
 export interface ITokenResponse {

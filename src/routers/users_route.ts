@@ -15,12 +15,13 @@ user_route
     validRequest,
     user_controller.createUser
   )
+  .put(Routes.CREATE_PASSWORD, user_controller.redefinePassword)
   .put(Routes.REDEFINE_PASSWORD, user_controller.redefinePassword)
   .put(
-    Routes.NEW_PASSWORD,
+    Routes.CHANGE_PASSWORD,
     verifyToken,
     verifyPermission(typePermissions),
-    user_controller.redefinePassword
+    user_controller.changePassword
   )
   .delete(
     Routes.DELETE_USER,

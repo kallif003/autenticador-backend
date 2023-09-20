@@ -16,12 +16,12 @@ const user_service_1 = __importDefault(require("../services/user_service"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 const passwordGenerator_1 = __importDefault(require("../utils/passwordGenerator"));
 const enum_1 = require("../utils/enum");
+const email_service_1 = __importDefault(require("../services/email_service"));
 class UserController {
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, email, role, service } = req.body;
-                console.log("oi");
                 const generator = new passwordGenerator_1.default();
                 const password = generator.generateRandomPassword();
                 yield user_service_1.default.createUser({
@@ -41,17 +41,30 @@ class UserController {
             }
         });
     }
+    changePassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { email, service } = req.body;
+                const { id } = req.params;
+                yield email_service_1.default.sendEmail(email, service, id, enum_1.Actions.UPDATE);
+                return res.status(201).json({ message: "Email enviado com sucesso" });
+            }
+            catch (error) {
+                return res.status(500).send({ message: error.message });
+            }
+        });
+    }
     redefinePassword(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password, service } = req.body;
                 const { id } = req.params;
                 yield user_service_1.default.passwordResetService([{ email, password }], id);
-                let url = "";
                 if (service == enum_1.Service.SAVEMONEY) {
-                    url = process.env.SAVEMONY_SERVICE;
+                    let url = process.env.SAVEMONY_SERVICE;
+                    return res.status(200).send(url);
                 }
-                return res.status(200).send(url);
+                return res.status(204).send("Senha redefinida com sucesso");
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {

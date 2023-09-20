@@ -55,7 +55,7 @@ const verifyPermission = (permission) => {
         }
         else {
             return res.status(401).send({
-                message: "Você não possui permissão para cadastrar esse tipo de usuário",
+                message: "Você não possui permissão",
             });
         }
     };

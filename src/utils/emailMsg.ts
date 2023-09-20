@@ -1,4 +1,20 @@
-export const message = (userId: string, service: string) => {
+export const message = (
+  userId: string,
+  service: string,
+  typeAction: string
+) => {
+  let title: string;
+  let info: string;
+
+  if (typeAction == "create") {
+    title = "Meu cadastro";
+    info =
+      "Para finalizar o seu cadastro, você será redirecionar para criar sua senha";
+  } else {
+    title = "Redefinição de senha";
+    info = "Você será redirecionar para redefinir sua senha";
+  }
+
   return ` 
     <html>
         <head>
@@ -33,16 +49,16 @@ export const message = (userId: string, service: string) => {
         </head>
         <body>
             <div id='container'> 
-                <h1>Meu cadastro</h1>
+                <h1>${title}</h1>
 
                 <p>Seja muito bem vindo ao nosso serviço de autenticação</p>
 
                 <p>
-                Para finalizar o seu cadastro, você será redirecionar para criar sua senha
+                    ${info}
                 </p>
 
                 <button>
-                <a href="${process.env.AUTHENTICATOR_FRONT}/cadastro/${service}/${userId}">Cadastrar senha</a>
+                    <a href="${process.env.AUTHENTICATOR_FRONT}/cadastro/${service}/${userId}">Cadastrar senha</a>
                 </button>
             </div>
         </body>

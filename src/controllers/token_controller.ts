@@ -1,5 +1,6 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import TokenService from "../services/token_service";
+import { UserPayload } from "../utils/interfaces";
 
 class TokenController {
   async createRefreshToken(req: Request, res: Response) {
@@ -15,16 +16,20 @@ class TokenController {
   }
 
   async validatedToken(req: Request, res: Response) {
-    const token = req.headers.authorization?.replace("Bearer ", "");
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
 
-    if (!token) {
-      res.status(401).json({ message: "Token não fornecido" });
-      return;
+      if (!token) {
+        res.status(401).json({ message: "Token não fornecido" });
+        return;
+      }
+
+      const validToken = TokenService.verifyToken(token);
+
+      return res.status(200).json(validToken);
+    } catch (error) {
+      return res.status(401).json({ message: "Token invalido" });
     }
-
-    const validToken = TokenService.verifyToken(token);
-
-    return res.status(200).json(validToken);
   }
 }
 
