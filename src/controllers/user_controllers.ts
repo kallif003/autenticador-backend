@@ -13,6 +13,7 @@ class UserController {
       const { name, email, role, service } = req.body;
 
       const generator = new PasswordGenerator();
+      
       const password = generator.generateRandomPassword();
 
       await UserService.createUser({
